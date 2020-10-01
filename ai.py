@@ -1,4 +1,4 @@
-import pyttsx3 #inst req
+import pyttsx3 #inst req      and pyaudio also
 import speech_recognition as sp #inst req
 import os
 import smtplib
@@ -7,17 +7,6 @@ import wikipedia #inst req
 import webbrowser
 import keyboard #inst req
 import random 
-
-'''voices = converter.getProperty('voices') 
-  
-for voice in voices: 
-    # to get the info. about various voices in our PC  
-    print("Voice:") 
-    print("ID: %s" %voice.id) 
-    print("Name: %s" %voice.name) 
-    print("Age: %s" %voice.age) 
-    print("Gender: %s" %voice.gender) 
-    print("Languages Known: %s" %voice.languages) '''
 
 
 engine = pyttsx3.init('sapi5')
@@ -43,9 +32,9 @@ def wishMe():
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587) 
     server.ehlo()
-    server.starttls()
-    server.login('technicalgamer9969@gmail.com', '9969219858')
-    server.sendmail('technicalgamer9969@gmail.com', to, content)
+    server.starttls()                                               # use gmail only because smtp is of gmail
+    server.login('email', 'password')
+    server.sendmail('email', to, content)
     server.close()
 
 def takeCommand():
@@ -73,21 +62,23 @@ if __name__ == "__main__":
 
         elif 'open youtube' in query:
             webbrowser.open("https://youtube.com")
+            speak("okay sir i have opened youtube in browser")
 
         elif 'open google' in query:
             webbrowser.open("https://google.com")
+            speak("okay sir i have opened google in browser")
         
         elif 'open spotify' in query:
             webbrowser.open("https://open.spotify.com/")
+            speak("okay sir i have opened spotify in browser")
 
         elif 'playlist' in query:
             webbrowser.open("https://www.youtube.com/watch?v=shSl-zxTInQ&list=PLVtaz1GemBHJM8A5NMkp2R9ZrdQo6gtUs&index=2")   
 
-
-        elif 'time table' in query:
+       elif 'time table' in query:
             tt="C:\\Users\\compu\\Desktop\\Annotation 2020-08-08 094914.jpg"
             os.startfile(tt)
-        
+
         elif 'the time' in query:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")    
             speak(f"Sir, the time is {strTime}")
@@ -96,7 +87,7 @@ if __name__ == "__main__":
             wit="C:\\Program Files\\Blender Foundation\\Blender 2.82\\blender.exe"
             os.startfile(wit)
 
-        elif 'open gmail' in query:
+        elif 'gmail' in query:
             webbrowser.open("https://mail.google.com/mail/u/0/#inbox")
 
         elif 'close' in query:
@@ -119,7 +110,7 @@ if __name__ == "__main__":
         elif 'wikipedia' in query:
             speak('Searching Wikipedia.....')
             query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=2)
+            results = wikipedia.summary(query, sentences=1)
             speak("According to Wikipedia")
             print(results)
             speak(results)
@@ -128,16 +119,22 @@ if __name__ == "__main__":
             os.system('cmd /c "shutdown.exe /s /t 60"')
 
         elif 'cancel' in query:
-            os.system('cmd /s "shutdown -a"')
+            os.system('cmd /c "shutdown -a"')
         elif 'class' in query:
             speak("no sir")
 
         elif 'game' in query:
             speak("okay sir pick a number form 1 to 9")
             x=random.randrange(0,10)
-            guess = takeCommand().int()
+            guess = takeCommand()
             if 'x' in guess:
                 speak("your guess was correct sir")
             else:
                 speak("wrong sir give it a next try")
             print("the number was",x)
+        elif'search' in query:
+            src=query.replace('search','')
+            webbrowser.open("https://www.youtube.com/results?search_query="+src)
+        elif "exit" in query:
+            exit()
+            
