@@ -1,12 +1,16 @@
-import pyttsx3  # inst req      and pyaudio also
-import speech_recognition as sp  # inst req
+import pyttsx3
+import speech_recognition as sp
 import os
 import smtplib
 import datetime
-import wikipedia  # inst req
+import wikipedia
 import webbrowser
-import keyboard  # inst req
+import keyboard
 import random
+import openai
+
+# Set your OpenAI API key here
+openai.api_key = "YOUR_OPENAI_API_KEY"
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -28,7 +32,7 @@ def wishMe():
 def sendEmail(to, content):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.ehlo()
-    server.starttls()  # use gmail only because smtp is of gmail
+    server.starttls()
     server.login('email', 'password')
     server.sendmail('email', to, content)
     server.close()
@@ -49,7 +53,23 @@ def takeCommand():
     return query
 
 def openweb(x):
-    speak("okay sir"+x+"have been opened")
+    speak("okay sir " + x + " has been opened")
+
+def ask_ai(question):
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",  # You can try other engines as well
+            prompt=question,
+            max_tokens=150,
+        )
+        answer = response['choices'][0]['text']
+        speak("The answer is:")
+        speak(answer)
+        print("Answer:", answer)
+    except Exception as e:
+        print(e)
+        speak("Sorry, I couldn't find an answer to your question.")
+
 def qry(query):
     if 'open youtube' in query:
         openweb("youtube")
@@ -61,7 +81,7 @@ def qry(query):
         openweb("netflix")
     elif 'search' in query:
         query = query.replace("search", "")
-        webbrowser.open("https://www.google.com/search?q="+query)
+        webbrowser.open("https://www.google.com/search?q=" + query)
     elif 'time' in query:
         strTime = datetime.datetime.now().strftime("%H:%M:%S")
         speak(f"Sir, the time is {strTime}")
@@ -105,12 +125,21 @@ def qry(query):
         else:
             speak("wrong sir give it a next try")
         print("the number was", x)
-    elif 'search'and'youtube' in query:
+    elif 'search' and 'youtube' in query:
         src = query.replace('search', '')
         webbrowser.open("https://www.youtube.com/results?search_query=" + src)
     elif "exit" in query:
         exit()
-wishMe()
-while True:
-    query = takeCommand().lower()
-    qry(query)
+    elif "ask question" in query:
+        speak("What is your question?")
+        question = takeCommand()
+        ask_ai(question)
+
+def main():
+    wishMe()
+    while True:
+        query = takeCommand().lower()
+        qry(query)
+
+if __name__ == "__main__":
+    main()
